@@ -6,6 +6,7 @@ from flask import Flask, render_template, request
 from sklearn.ensemble import StackingClassifier
 
 app = Flask(__name__)
+os.makedirs('uploads', exist_ok=True)  # uploaded CSV files are stored here briefly
 
 # Load the stacking ensemble model
 with open('stacking_ensemble_model.pkl', 'rb') as model_file:
@@ -110,4 +111,5 @@ def index():
     return render_template('upload.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # 0.0.0.0 so the app is reachable from outside a Docker container; no debug mode when exposed
+    app.run(host='0.0.0.0', port=5000)

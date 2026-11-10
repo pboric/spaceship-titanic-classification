@@ -1,78 +1,63 @@
 # Spaceship Titanic: Passenger Transport Prediction
 
-## Project Overview
-
-This project is centered around predicting whether passengers aboard the Spaceship Titanic were transported to an alternate dimension following an encounter with a spacetime anomaly. The prediction is a binary classification problem where the target variable is whether a passenger was transported or not.
-
-## Dataset
-
-The project utilizes three key datasets:
-
-- **Train Dataset (`train.csv`)**: Contains records of passengers, including the target variable indicating whether they were transported.
-- **Test Dataset (`test.csv`)**: Contains records of passengers without the target variable. This dataset is used to evaluate the model's performance on unseen data.
-- **Sample Submission (`sample_submission.csv`)**: Provides the format for submitting predictions.
-
-### Data Fields
-
-- **PassengerId**: Unique ID for each passenger (format: `gggg_pp` where `gggg` is the group and `pp` is the passenger's number within the group).
-- **HomePlanet**: The planet from which the passenger departed.
-- **CryoSleep**: Indicates if the passenger was in suspended animation during the voyage.
-- **Cabin**: The passenger's cabin number (format: `deck/num/side`).
-- **Destination**: The destination planet.
-- **Age**: The passenger's age.
-- **VIP**: Whether the passenger paid for VIP services.
-- **RoomService, FoodCourt, ShoppingMall, Spa, VRDeck**: Amounts billed at the Spaceship Titanic's amenities.
-- **Name**: Passenger's first and last name.
-- **Transported**: Target variable, indicating whether the passenger was transported to another dimension (True/False).
-
-## Requirements
-
-The following Python libraries are required:
-
-- pandas
-- numpy
-- matplotlib
-- seaborn
-- scikit-learn
-- lazypredict
-- optuna
-- statsmodels
-- scipy
-- lightgbm
-
-To install the required libraries, you can run:
-
-```bash
-pip install -r requirements.txt
-```
-
-## Project Structure
-
-- **Data Loading**: Load the training and testing datasets.
-- **Exploratory Data Analysis (EDA)**: Analyze and visualize the data to understand distributions and relationships.
-- **Feature Engineering**: Create new features such as `CabinDeck`, `CabinSide`, `PassengerGroup`, and `IsAlone` from existing features.
-- **Modeling**: Use various machine learning models to predict whether passengers were transported. Models include:
-  - Random Forest
-  - Decision Tree
-  - LightGBM
-  - Logistic Regression
-- **Model Evaluation**: Evaluate models using metrics such as accuracy, F1-score, and ROC-AUC score.
-- **Hyperparameter Tuning**: Use Optuna for hyperparameter optimization.
-
-## How to Run
-
-1. **Load Data**: Ensure that the `train.csv` and `test.csv` files are available in the working directory.
-2. **Run the Script**: Execute the provided Python script. It will:
-   - Load and preprocess the data.
-   - Perform exploratory data analysis.
-   - Train and evaluate various machine learning models.
-   - Optimize the models using hyperparameter tuning.
-3. **Generate Predictions**: The script will output predictions for the test dataset, which can be submitted for evaluation.
+Predicting which passengers of the fictional Spaceship Titanic were transported to another dimension (Kaggle
+"Spaceship Titanic" competition): a tabular binary classification project from exploratory analysis and statistical
+tests to a stacking ensemble, served through a small Flask web app.
 
 ## Results
 
-The results of the analysis include insights into which features are most important for predicting passenger transport and the performance metrics of different models. Passengers who were not alone, were in CryoSleep, or were on certain decks had higher probabilities of being transported.
+Hold-out test split of the training data:
 
-## Author
+| Model | Accuracy | F1 |
+|---|---:|---:|
+| **Stacking ensemble** | **0.796** | **0.806** |
+| LightGBM | 0.793 | 0.802 |
+| Soft-voting ensemble | 0.787 | 0.800 |
+| Logistic regression | 0.783 | 0.795 |
+| AdaBoost | 0.782 | 0.797 |
 
-Petar Krešimir Borić
+The stacking ensemble reaches a ROC AUC of 0.886.
+
+## What the notebook covers
+
+1. **EDA:** univariate and bivariate analysis of the passenger features and their relation to the target.
+2. **Statistical inference:** hypothesis tests, for example whether travelling alone is related to being
+   transported (proportion z-test).
+3. **Cleaning and feature engineering:** missing values, outliers, and new features such as cabin deck and side,
+   passenger group and travelling alone.
+4. **Modelling:** a quick comparison of many models with LazyPredict, Optuna tuning of the best ones, then voting and
+   stacking ensembles.
+
+## Repository
+
+| File | Content |
+|---|---|
+| [`spaceship_titanic.ipynb`](spaceship_titanic.ipynb) | The full analysis and modelling |
+| `utils.py` | Helper functions used by the notebook |
+| `train.csv`, `test.csv` | Competition data |
+| `stacking_ensemble_model.pkl` | The trained stacking model |
+| `app.py`, `templates/`, `Dockerfile` | Flask web app: upload a CSV of passengers (same columns as `test.csv`) and see the share predicted to be transported |
+
+## Run it
+
+```bash
+pip install -r requirements.txt            # Python 3.10; versions pinned so the saved model loads
+jupyter notebook spaceship_titanic.ipynb   # the analysis
+python app.py                              # the web app on http://localhost:5000
+```
+
+Or with Docker:
+
+```bash
+docker build -t spaceship-titanic .
+docker run -p 5000:5000 spaceship-titanic
+```
+
+## Data
+
+[Spaceship Titanic](https://www.kaggle.com/competitions/spaceship-titanic) on Kaggle; `train.csv` and `test.csv` are
+included.
+
+## License
+
+MIT

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Spaceship Titanic predictions</title>
+  <style>body { font-family: sans-serif; max-width: 40rem; margin: 3rem auto; line-height: 1.5; }</style>
+</head>
+<body>
+  <h1>Spaceship Titanic: who was transported?</h1>
+  <p>Upload a CSV file with the same columns as <code>test.csv</code>. The stacking model predicts, for each passenger,
+     whether they were transported, and shows the shares.</p>
+  <form method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".csv" required>
+    <button type="submit">Predict</button>
+  </form>
+</body>
+</html>
